@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addContact } from '../../redux/contacts/actions';
+import { addContact } from '../../redux/contacts/phonebookOperation';
 import PropTypes from 'prop-types';
 import {
   StyledForm,
@@ -14,7 +14,7 @@ const Form = () => {
   const [number, setNumber] = useState('');
 
   const dispatch = useDispatch();
-  const items = useSelector(state => state.contacts.items);
+  const { entities } = useSelector(state => state.contacts);
 
   const handleChange = e => {
     const { name, value } = e.currentTarget;
@@ -37,14 +37,14 @@ const Form = () => {
     e.preventDefault();
 
     if (
-      items
-        .map(contact => contact.name.toLowerCase())
+      entities
+        .map(entities => entities.name.toLowerCase())
         .includes(name.toLowerCase())
     ) {
       return alert(`${name} is already in contacts`);
     }
 
-    dispatch(addContact(name, number));
+    dispatch(addContact({ name, number }));
 
     reset();
   };

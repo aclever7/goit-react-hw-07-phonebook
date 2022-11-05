@@ -1,5 +1,9 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { removeContact } from '../../redux/contacts/actions';
+import { useEffect } from 'react';
+import {
+  fetchContacts,
+  removeContact,
+} from '../../redux/contacts/phonebookOperation';
 import PropTypes from 'prop-types';
 import {
   ContactList,
@@ -8,12 +12,16 @@ import {
 } from './Contact.styled';
 
 const Contact = () => {
-  const filter = useSelector(state => state.contacts.filter).toLowerCase();
-  const items = useSelector(state => state.contacts.items);
-  const contacts = items.filter(({ name }) =>
+  const { filter, entities } = useSelector(state => state.contacts);
+  const dispatch = useDispatch();
+
+  const contacts = entities.filter(({ name }) =>
     name.toLowerCase().includes(filter)
   );
-  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
 
   return (
     <ContactList>
